@@ -1,61 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".ProfileUpdate">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/img_avatar"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="138dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="123dp"
-        android:src="@mipmap/avata3"
+        android:src="@drawable/ic_avatar_default"
         app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
-        tools:ignore="MissingConstraints" />
+        app:civ_border_width="2dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nguyễn Đức Hưng"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/profile_image"
-        android:layout_centerHorizontal="true"
-        />
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="19521570@gmail.com"
-        android:textSize="16sp"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/textView"
-        android:layout_centerHorizontal="true"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Nguyễn Đức Hưng"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        />-->
+<!--    <TextView-->
+<!--        android:id="@+id/textView1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="19521570@gmail.com"-->
+<!--        android:textSize="16sp"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        />-->
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="77dp"
-        android:layout_below="@id/textView1"
-        android:layout_marginTop="8dp"
-        android:src="@mipmap/profile7" />
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="77dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:src="@mipmap/profile7" />-->
 
     <LinearLayout
         android:id="@+id/profileview1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView1"
         android:padding="5dp">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -66,87 +57,92 @@
             android:textColorHint="#B81BD3">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name"
+                android:id="@+id/edt_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="10dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Birthday"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="#B81BD3">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
-                android:text="Nguyễn Đức Hưng" />
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="#B81BD3">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@id/profileview1"
-        android:id="@+id/profileview2">
+        android:padding="5dp">
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Số Điện Thoại"
+            android:hint="Location"
             android:layout_marginBottom="5dp"
             android:textColorHint="#B81BD3">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="10dp"
-                android:text="0799570172"
-                android:id="@+id/sdt"
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@id/profileview2"
-        android:id="@+id/profileview3">
+        android:padding="5dp">
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mail"
+            android:hint="Bio"
             android:layout_marginBottom="5dp"
             android:textColorHint="#B81BD3">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_bio"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_person"
-                android:drawablePadding="10dp"
-                android:text="19521570@gmail.com"
-                android:id="@+id/mail"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@id/profileview3"
-        android:id="@+id/profileview4">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Địa Chỉ"
-            android:layout_marginBottom="5dp"
-            android:textColorHint="#B81BD3">
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_diachi"
-                android:drawablePadding="10dp"
-                android:text="110 Hồ Bá Kiện, Phường 15, Quận 10, HCM"
-                android:id="@+id/diachi"
-                />
+                android:layout_height="80dp"
+                android:drawablePadding="10dp" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_update_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profileview4"
-        android:text="Update"
+        android:text="Update Profile"
         android:textStyle="bold" />
 
 
-</RelativeLayout>
+</LinearLayout>

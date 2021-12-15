@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
@@ -10,15 +12,13 @@
         android:id="@+id/profile_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:src="@mipmap/avata3"
+        android:src="@drawable/ic_avatar_default"
         app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
-        tools:ignore="MissingConstraints" />
+        app:civ_border_width="1dp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_fullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_image"
@@ -34,7 +34,6 @@
         android:text="1952xxxxx@gmail.com"
         android:textSize="16sp"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/textView"
         android:layout_centerHorizontal="true"
         />
 
@@ -42,7 +41,6 @@
         android:id="@+id/show_update_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
         android:layout_marginTop="53dp"
         android:orientation="horizontal">
 
@@ -66,7 +64,6 @@
         android:id="@+id/show_my_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/show_update_profile"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -90,7 +87,6 @@
         android:id="@+id/show_my_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/show_my_question"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -114,7 +110,6 @@
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/show_my_comment"
         android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
@@ -135,4 +130,4 @@
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -3,34 +3,36 @@ package com.example.forumlearning;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.ActionProvider;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.example.forumlearning.ui.ChangePasswordFragment;
+import com.example.forumlearning.ui.MyProfileFragment;
 import com.example.forumlearning.ui.home.HomeFragment;
-import com.example.forumlearning.ui.profile.ProfileFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -38,7 +40,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.forumlearning.databinding.ActivityMainBinding;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +48,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static final int MY_REQUEST_CODE = 10;
+    private static MainActivity instance;
+    public static MainActivity getInstance() {
+        return instance;
+    }
 
     private NavigationView navigationView;
     private AppBarConfiguration mAppBarConfiguration;
@@ -56,7 +65,27 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvName, tvEmail;
     private DrawerLayout drawer;
     private FrameLayout frameLayout;
-    ActionBarDrawerToggle toggle;
+    private ActionBarDrawerToggle toggle;
+    final private MyProfileFragment mMyProfileFragment = new MyProfileFragment();
+
+    final private ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                if (intent == null) return;
+
+                Uri uri = intent.getData();
+                mMyProfileFragment.setUri(uri);
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    mMyProfileFragment.setBitmapImageView(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +128,11 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if(id == R.id.nav_home) {
-
                     loadFragment(new HomeFragment());
                 } else if(id == R.id.nav_profile) {
-                    loadFragment(new ProfileFragment());
+                    loadFragment(mMyProfileFragment);
+                } else if(id == R.id.nav_change_password){
+                    loadFragment(new ChangePasswordFragment());
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
@@ -203,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void showUserInformation() {
+    public void showUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null){
             return;
@@ -236,5 +266,25 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_REQUEST_CODE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGllery();
+            } else {
+                Toast.makeText(MainActivity.this, "Chưa được cấp quyền!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void openGllery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        mActivityResultLauncher.launch(Intent.createChooser(intent, "Select Avatar"));
+
     }
 }

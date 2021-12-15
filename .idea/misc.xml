@@ -26,8 +26,10 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/detail_question.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_change_password.xml" value="0.19429347826086957" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_my_profile.xml" value="0.19429347826086957" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.31805320864004993" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.28229166666666666" />

@@ -7,12 +7,16 @@
         <item
             android:id="@+id/nav_home"
             android:title="@string/menu_home" />
-        <item
-            android:id="@+id/nav_profile"
-            android:title="@string/menu_profile" />
+
     </group>
     <item android:title="Account">
         <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:title="@string/menu_profile" />
+            <item
+                android:id="@+id/nav_change_password"
+                android:title="Change Password" />
             <item
                 android:id="@+id/nav_sign_out"
                 android:title="Sign Out" />
