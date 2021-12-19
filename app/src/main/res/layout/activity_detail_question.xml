@@ -7,72 +7,71 @@
     tools:context=".DetailQuestion">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tv_title_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="6dp"
         android:text="Title"
         android:textColor="#000000"
+        android:gravity="center"
         android:textSize="24dp" />
 
     <LinearLayout
         android:id="@+id/infor_title"
-        android:layout_below="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_question"
         android:orientation="horizontal"
+        android:paddingVertical="10dp"
         android:paddingLeft="6dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp">
 
         <TextView
+            android:id="@+id/tv_author_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="By XXXXXX"
-            android:textSize="16dp"/>
+            android:textSize="16dp" />
+
         <TextView
+            android:id="@+id/tv_time_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="about 3000 years"
-            android:textSize="16dp"/>
+            android:text="about years"
+            android:textSize="16dp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/img_title"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_content_question"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infor_title"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="87dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/img" />
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:maxHeight="500dp"
+        android:layout_marginVertical="10dp"
+        android:textSize="17dp" />
 
     <TextView
         android:id="@+id/answer_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/img_title"
-        android:paddingTop="6dp"
+        android:layout_below="@+id/tv_content_question"
         android:paddingLeft="6dp"
+        android:paddingTop="6dp"
         android:text="Answers: "
-        android:textSize="24dp"
-        android:textColor="#111111"/>
+        android:textColor="#111111"
+        android:textSize="24dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/answer_tv"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src= "@drawable/avatar"
-            android:scaleType="fitXY"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
-                android:text="User name: "
+                android:text="User name "
                 android:textSize="12dp"/>
             <TextView
                 android:layout_width="match_parent"
@@ -104,13 +103,15 @@
         android:paddingTop="6dp"
         android:background="#b5b5b5">
         <EditText
+            android:id="@+id/edt_comment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:paddingLeft="6dp"
-            android:hint="Comment now!!!"
+            android:hint="Comment now!"
             android:layout_marginLeft="2dp"/>
         <Button
+            android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -72,6 +72,9 @@ public class ChangePasswordFragment extends Fragment {
 
     private void onClickChangePassword() {
         String strNewPassword = edtNewPassword.getText().toString().trim();
+
+        // TODO: check password
+
         progressDialog.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

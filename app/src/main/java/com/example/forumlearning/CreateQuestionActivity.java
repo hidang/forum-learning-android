@@ -2,14 +2,11 @@ package com.example.forumlearning;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -17,125 +14,97 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class Login extends AppCompatActivity {
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
-    private LinearLayout layoutSignup;
-    private EditText edtEmail, edtPassword;
-    private Button btnSignIn;
+public class CreateQuestionActivity extends AppCompatActivity {
+
+    private EditText edtTitle, edtContent;
+    private Button btnCreateQuestion;
     private ProgressDialog progressDialog;
-    private LinearLayout layoutForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_create_question);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        progressDialog = new ProgressDialog(this);
 
         initUi();
         initListener();
     }
 
     private void initUi() {
-        progressDialog = new ProgressDialog(this);
-
-        layoutSignup = findViewById(R.id.layout_sign_up);
-        edtEmail = findViewById(R.id.edt_email);
-        edtPassword = findViewById(R.id.edt_password);
-        btnSignIn = findViewById(R.id.btn_sign_in);
-        layoutForgotPassword = findViewById(R.id.layout_forgot_password);
+        edtTitle = findViewById(R.id.edt_title);
+        edtContent = findViewById(R.id.edt_content);
+        btnCreateQuestion = findViewById(R.id.btn_create);
     }
 
     private void initListener() {
-        layoutSignup.setOnClickListener(new View.OnClickListener() {
+        btnCreateQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this, SignUp.class);
-                startActivity(intent);
-            }
-        });
-
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickSignIn();
-            }
-        });
-
-        layoutForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickForgotPassword();
+                onClickCreateQuestion();
             }
         });
     }
 
-    private void onClickForgotPassword() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-        builder.setTitle("Your Email:");
-        final EditText input = new EditText(Login.this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressDialog.show();
-                auth.sendPasswordResetEmail(input.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                progressDialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(Login.this, "Email Reset Password Sent!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
-
-    private void onClickSignIn() {
-        String strEmail = edtEmail.getText().toString().trim();
-        String strPassword = edtPassword.getText().toString().trim();
-
-        // TODO: validate email, chua nhap pass,...
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+    private void onClickCreateQuestion() {
+        String title = edtTitle.getText().toString();
+        String content = edtContent.getText().toString();
+        if (title.equals("")) {
+            Toast.makeText(CreateQuestionActivity.this, "Title không được trống!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (content.equals("")) {
+            Toast.makeText(CreateQuestionActivity.this, "Content không được trống!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         progressDialog.show();
-        auth.signInWithEmailAndPassword(strEmail, strPassword)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            startActivity(intent);
-                            finishAffinity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        User _user = new User(user.getUid(), user.getEmail(), user.getDisplayName());
+        String idQuestion = UUID.randomUUID().toString();
+        Date currentTime = Calendar.getInstance().getTime();
+        Question question = new Question(idQuestion, _user, title, content, currentTime.getTime());
+        myRef.child("questions").child(idQuestion).setValue(question, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@androidx.annotation.Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                progressDialog.dismiss();
+                Toast.makeText(CreateQuestionActivity.this, "Question Posted", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
