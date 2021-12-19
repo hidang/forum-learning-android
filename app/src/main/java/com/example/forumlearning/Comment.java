@@ -8,6 +8,26 @@ public class Comment {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getIdQuestion() {
+        return idQuestion;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
     public String id;
     public String idQuestion;
     public User author;

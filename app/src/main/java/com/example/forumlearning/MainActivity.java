@@ -124,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(mMyProfileFragment);
                 } else if(id == R.id.nav_change_password){
                     loadFragment(new ChangePasswordFragment());
+                } else if(id == R.id.nav_my_question) {
+                    Intent intent = new Intent(MainActivity.this, MyQuestion.class);
+                    startActivity(intent);
+                } else if(id == R.id.nav_comment){
+                    Intent intent = new Intent(MainActivity.this, MyComment.class);
+                    startActivity(intent);
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

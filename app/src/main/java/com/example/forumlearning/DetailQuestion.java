@@ -1,8 +1,12 @@
 package com.example.forumlearning;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -16,15 +20,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -35,7 +43,9 @@ public class DetailQuestion extends AppCompatActivity {
     private EditText edtComment;
     private ProgressDialog progressDialog;
     private Button btnComment;
-
+    private RecyclerView rcComments;
+    private CommentAdapter mCommentAdapter;
+    private List<Comment> mListComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,7 @@ public class DetailQuestion extends AppCompatActivity {
                         sdf.setTimeZone(TimeZone.getTimeZone("GMT+7")); // give a timezone reference for formating (see comment at the bottom
                         String formattedDate = sdf.format(date);
                         tvTime.setText(formattedDate);
+                        getListCommentFromRealtimeDatabase();
                         return;
                     }
                 }
@@ -95,6 +106,54 @@ public class DetailQuestion extends AppCompatActivity {
         tvTime = findViewById(R.id.tv_time_question);
         edtComment = findViewById(R.id.edt_comment);
         btnComment = findViewById(R.id.btn_comment);
+        rcComments = findViewById(R.id.rcv_comments);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rcComments.setLayoutManager(linearLayoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        rcComments.addItemDecoration(dividerItemDecoration);
+
+        mListComments = new ArrayList<>();
+        mCommentAdapter = new CommentAdapter(mListComments);
+        rcComments.setAdapter(mCommentAdapter);
+    }
+
+    private void getListCommentFromRealtimeDatabase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("comments");
+
+        Query query = myRef.orderByChild("idQuestion").equalTo(question.getId());
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Comment comment = snapshot.getValue(Comment.class);
+                if (question != null) {
+                    mListComments.add(comment);
+                    mCommentAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void onClickCreateComment() {

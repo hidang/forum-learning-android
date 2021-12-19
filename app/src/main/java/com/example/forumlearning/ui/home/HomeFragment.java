@@ -147,12 +147,34 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Question question =  snapshot.getValue(Question.class);
+                if (mListQuestions == null || mListQuestions.isEmpty()) {
+                    return;
+                }
+                for (int i=0; i< mListQuestions.size(); i++) {
+                    if (question.getId().equals(mListQuestions.get(i).getId())) {
+                        mListQuestions.set(i, question);
+                        break;
+                    }
+                }
 
+                mQuestionAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Question question =  snapshot.getValue(Question.class);
+                if (mListQuestions == null || mListQuestions.isEmpty()) {
+                    return;
+                }
+                for (int i=0; i< mListQuestions.size(); i++) {
+                    if (question.getId().equals(mListQuestions.get(i).getId())) {
+                        mListQuestions.remove(mListQuestions.get(i));
+                        break;
+                    }
+                }
 
+                mQuestionAdapter.notifyDataSetChanged();
             }
 
             @Override

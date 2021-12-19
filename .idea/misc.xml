@@ -39,6 +39,9 @@
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.20199275362318841" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/item_comment.xml" value="0.20199275362318841" />
+        <entry key="app/src/main/res/layout/item_my_comment.xml" value="0.20199275362318841" />
+        <entry key="app/src/main/res/layout/item_my_question.xml" value="0.20199275362318841" />
         <entry key="app/src/main/res/layout/item_question.xml" value="0.20199275362318841" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/signup_fragment.xml" value="0.28229166666666666" />
