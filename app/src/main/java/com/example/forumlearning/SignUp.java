@@ -53,8 +53,12 @@ public class SignUp extends AppCompatActivity {
     private void onClickSignUp() {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
+        String passwordAgain = edtPasswordAgain.getText().toString().trim();
 
-        // TODO: check logic in 16/12/2021
+        if (!password.equals(passwordAgain)) {
+            Toast.makeText(this, "Wrong Password Confirm!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         progressDialog.show();

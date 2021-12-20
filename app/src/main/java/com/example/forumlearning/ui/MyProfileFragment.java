@@ -37,7 +37,7 @@ public class MyProfileFragment extends Fragment {
 
     private View mView;
     private ImageView imgAvatar;
-    private EditText edtFullName, edtDob, edtEmail, edtLocation, edtBio;
+    private EditText edtFullName, edtEmail;
     private Button btnUpdateProfile;
     private Uri mUri;
     private MainActivity mainActivity;
@@ -62,10 +62,7 @@ public class MyProfileFragment extends Fragment {
     private void initUi() {
         imgAvatar = mView.findViewById(R.id.img_avatar);
         edtFullName = mView.findViewById(R.id.edt_fullname);
-        edtDob = mView.findViewById(R.id.edt_dob);
         edtEmail = mView.findViewById(R.id.edt_email);
-        edtLocation = mView.findViewById(R.id.edt_location);
-        edtBio = mView.findViewById(R.id.edt_bio);
         btnUpdateProfile = mView.findViewById(R.id.btn_update_profile);
     }
 

@@ -1,9 +1,14 @@
 package com.example.forumlearning.ui.home;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +42,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
@@ -99,11 +107,38 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        edtQuestion = view.findViewById(R.id.edt_question);
         btnSearchQustion = view.findViewById(R.id.btn_search_question);
         btnSearchQustion.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                getListQuestionFromRealtimeDatabase();
+                if (edtQuestion.getText().toString().trim().equals("")) return;
+
+                String searchInput = edtQuestion.getText().toString().trim();
+                Predicate<Question> byTitle = ques -> !ques.getTitle().toLowerCase().contains(searchInput.toLowerCase());
+//                List<Question> _m = mListQuestions;
+                mListQuestions.removeAll(mListQuestions.stream().filter(byTitle)
+                        .collect(Collectors.toList()));
+
+                mQuestionAdapter.notifyDataSetChanged();
+            }
+        });
+
+        edtQuestion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals("")){
+                    getListQuestionFromRealtimeDatabase();
+                }
             }
         });
 
@@ -141,8 +176,8 @@ public class HomeFragment extends Fragment {
                 Question question = snapshot.getValue(Question.class);
                 if (question != null) {
                     mListQuestions.add(0, question);
-                    mQuestionAdapter.notifyDataSetChanged();
                 }
+                mQuestionAdapter.notifyDataSetChanged();
             }
 
             @Override

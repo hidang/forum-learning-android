@@ -74,9 +74,9 @@ public class DetailQuestion extends AppCompatActivity {
                         tvAuthor.setText(question.author.getFullname());
                         tvContent.setText(question.getContent());
 
-                        Date date = new Date(question.time*1000L); // *1000 is to convert seconds to milliseconds
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/2021  -  hh:mm:ss"); // the format of your date
-                        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7")); // give a timezone reference for formating (see comment at the bottom
+                        Date date = new Date(question.time*1000L);
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/2021");
+                        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
                         String formattedDate = sdf.format(date);
                         tvTime.setText(formattedDate);
                         getListCommentFromRealtimeDatabase();
@@ -136,12 +136,34 @@ public class DetailQuestion extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Comment comment =  snapshot.getValue(Comment.class);
+                if (mListComments == null || mListComments.isEmpty()) {
+                    return;
+                }
+                for (int i=0; i< mListComments.size(); i++) {
+                    if (comment.getId().equals(mListComments.get(i).getId())) {
+                        mListComments.set(i, comment);
+                        break;
+                    }
+                }
 
+                mCommentAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Comment comment =  snapshot.getValue(Comment.class);
+                if (mListComments == null || mListComments.isEmpty()) {
+                    return;
+                }
+                for (int i=0; i< mListComments.size(); i++) {
+                    if (comment.getId().equals(mListComments.get(i).getId())) {
+                        mListComments.remove(mListComments.get(i));
+                        break;
+                    }
+                }
 
+                mCommentAdapter.notifyDataSetChanged();
             }
 
             @Override

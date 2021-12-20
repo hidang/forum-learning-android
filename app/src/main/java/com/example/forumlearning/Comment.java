@@ -2,6 +2,9 @@ package com.example.forumlearning;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @IgnoreExtraProperties
 public class Comment {
     public Comment() {
@@ -28,6 +31,10 @@ public class Comment {
         return time;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String id;
     public String idQuestion;
     public User author;
@@ -40,5 +47,11 @@ public class Comment {
         this.author = author;
         this.content = content;
         this.time = time;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("content", content);
+        return result;
     }
 }

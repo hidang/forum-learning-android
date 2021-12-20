@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 public class ChangePasswordFragment extends Fragment {
 
     private View mView;
-    private EditText edtNewPassword, edtNewPasswordAgain;
+    private EditText edtNewPassword, edtNewPasswordConfirm;
     private Button btnChangePassword;
     private ProgressDialog progressDialog;
 
@@ -58,6 +58,7 @@ public class ChangePasswordFragment extends Fragment {
 
     private void initUi() {
         edtNewPassword = mView.findViewById(R.id.edt_new_password);
+        edtNewPasswordConfirm = mView.findViewById(R.id.edt_new_password_confirm);
         btnChangePassword = mView.findViewById(R.id.btn_change_password);
     }
 
@@ -72,8 +73,12 @@ public class ChangePasswordFragment extends Fragment {
 
     private void onClickChangePassword() {
         String strNewPassword = edtNewPassword.getText().toString().trim();
+        String strNewPasswordConfirm = edtNewPasswordConfirm.getText().toString().trim();
 
-        // TODO: check password
+        if (!strNewPassword.equals(strNewPasswordConfirm)) {
+            Toast.makeText(getActivity(), "Wrong Password Confirm!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         progressDialog.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
