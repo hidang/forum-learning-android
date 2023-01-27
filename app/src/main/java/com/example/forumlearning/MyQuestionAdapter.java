@@ -52,11 +52,11 @@ public class MyQuestionAdapter extends RecyclerView.Adapter<MyQuestionAdapter.Qu
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         Question question = mListQuestion.get(position);
         if (question == null) return;
-        User user = question.getAuthor();
+        String user = question.getIdAuthor();
         holder.tvTitleQuestion.setText(question.title);
 
-        Date date = new Date(question.time*1000L); // *1000 is to convert seconds to milliseconds
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/2021  -  hh:mm:ss"); // the format of your date
+        Date date = new Date(question.time); // *1000 is to convert seconds to milliseconds
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy  -  HH:mm:ss"); // the format of your date
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+7")); // give a timezone reference for formating (see comment at the bottom
         String formattedDate = sdf.format(date);
         holder.tvTimeQuestion.setText(formattedDate);

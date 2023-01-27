@@ -2,16 +2,14 @@ package com.example.forumlearning.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.forumlearning.MainActivity;
 import com.example.forumlearning.MyComment;
 import com.example.forumlearning.MyQuestion;
 import com.example.forumlearning.ProfileUpdate;

@@ -153,8 +153,8 @@ public class MyComment extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("comments");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        Query query = myRef.orderByChild("author/id").equalTo(user.getUid());
+        // query comments of current question
+        Query query = myRef.orderByChild("idAuthor").equalTo(user.getUid());
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

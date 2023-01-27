@@ -16,6 +16,23 @@
         android:src="@drawable/ic_logo_forumleaning" />
 
     <EditText
+        android:id="@+id/edt_fullname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/edit"
+        android:drawableRight="@drawable/ic_username"
+        android:ems="15"
+        android:hint="Full Name"
+        android:imeOptions="actionNext"
+        android:maxLength="100"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textSize="20dp" />
+
+    <EditText
         android:id="@+id/edt_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,13 +40,14 @@
         android:background="@drawable/edit"
         android:drawableRight="@drawable/ic_username"
         android:ems="15"
-        android:hint="User name"
+        android:hint="Email"
         android:imeOptions="actionNext"
         android:maxLength="100"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
+        android:inputType="textEmailAddress"
         android:textSize="20dp" />
 
     <EditText

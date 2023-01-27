@@ -24,28 +24,40 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:layout_marginTop="10dp"
+            android:textStyle="bold"
             android:text="Title: " />
         <EditText
             android:id="@+id/edt_update_title_question"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:ems="10"
+            android:inputType="textLongMessage"
             android:hint=""/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:layout_marginTop="20dp"
+            android:textStyle="bold"
             android:text="Content: " />
         <EditText
             android:id="@+id/edt_update_content_question"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:ems="10"
+            android:inputType="textLongMessage"
             android:hint="" />
+
+        <ImageView
+            android:background="#2d2d2d"
+            android:id="@+id/img_update_question"
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background" />
 
         <LinearLayout
             android:layout_width="match_parent"

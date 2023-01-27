@@ -19,10 +19,6 @@ public class Comment {
         return idQuestion;
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
     public String getContent() {
         return content;
     }
@@ -31,20 +27,24 @@ public class Comment {
         return time;
     }
 
+    public String getIdAuthor() {
+        return idAuthor;
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
 
     public String id;
     public String idQuestion;
-    public User author;
+    public String idAuthor = "";
     public String content;
     public long time;
 
-    public Comment(String id, String idQuestion, User author, String content, long time) {
+    public Comment(String id, String idQuestion, String idAuthor, String content, long time) {
         this.id = id;
         this.idQuestion = idQuestion;
-        this.author = author;
+        this.idAuthor = idAuthor;
         this.content = content;
         this.time = time;
     }

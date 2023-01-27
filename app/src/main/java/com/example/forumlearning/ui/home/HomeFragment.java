@@ -5,18 +5,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +43,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
     private EditText edtQuestion;
-    private Button btnCreateQuestion, btnSearchQustion;
+    private Button btnCreateQuestion;
+    private ImageView btnSearchQuestion;
     private RecyclerView rcQuestions;
     private QuestionAdapter mQuestionAdapter;
     private List<Question> mListQuestions;
@@ -108,8 +102,8 @@ public class HomeFragment extends Fragment {
         });
 
         edtQuestion = view.findViewById(R.id.edt_question);
-        btnSearchQustion = view.findViewById(R.id.btn_search_question);
-        btnSearchQustion.setOnClickListener(new View.OnClickListener() {
+        btnSearchQuestion = view.findViewById(R.id.img_btn_search_question);
+        btnSearchQuestion.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
@@ -149,7 +143,6 @@ public class HomeFragment extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("questions");
 
-        // My top posts by number of stars
         // Cach 1
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override

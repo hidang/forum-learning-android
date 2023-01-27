@@ -1,5 +1,16 @@
 package com.example.forumlearning;
 
+import android.app.ProgressDialog;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -8,17 +19,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +43,8 @@ import java.util.UUID;
 public class DetailQuestion extends AppCompatActivity {
 
     private Question question;
-    private TextView tvTitle, tvContent, tvAuthor, tvTime;
+    private ImageView imgQuestion, imgAvatarAuthor;
+    private TextView tvTitle, tvContent, tvAuthorTime;
     private EditText edtComment;
     private ProgressDialog progressDialog;
     private Button btnComment;
@@ -59,29 +64,81 @@ public class DetailQuestion extends AppCompatActivity {
         initUi();
 
         Bundle b = getIntent().getExtras();
-        String id = b.getString("questionID");
+        String questionID = b.getString("questionID");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("questions");
-        myRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference questionRef = FirebaseHelper
+                .mDatabaseReference
+                .child("questions")
+                .child(questionID);
+
+        questionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Question _question = postSnapshot.getValue(Question.class);
-                    if (id.equals(_question.getId())) {
-                        question = _question;
-                        tvTitle.setText(question.getTitle());
-                        tvAuthor.setText(question.author.getFullname());
-                        tvContent.setText(question.getContent());
+                question = dataSnapshot.getValue(Question.class);
+                if (question != null) {
+                    tvTitle.setText(question.getTitle());
+                    // get form db (users table) -> get image user
+                    try {
+                        DatabaseReference userRef = FirebaseHelper.mDatabaseReference.child("users").child(question.getIdAuthor());
+                        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    User author = task.getResult().getValue(User.class);
+                                    if (author != null) {
+                                        Date date = new Date(question.time);
+                                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm - dd-MM-yyyy");
+                                        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+                                        String formattedDate = sdf.format(date);
+                                        tvAuthorTime.setText(formattedDate + " | " + author.getFullname());
 
-                        Date date = new Date(question.time*1000L);
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/2021");
-                        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
-                        String formattedDate = sdf.format(date);
-                        tvTime.setText(formattedDate);
-                        getListCommentFromRealtimeDatabase();
-                        return;
+                                        StorageReference avatarsStorageRef = FirebaseHelper.mFStorage.child("assets/avatars/" + author.getId());
+                                        if (avatarsStorageRef != null) {
+                                            avatarsStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                    try {
+                                                        Uri uri = task.getResult();
+                                                        if (uri != null) {
+                                                            Glide.with(getApplicationContext())
+                                                                    .load(task.getResult())
+                                                                    .error(R.drawable.ic_avatar_default)
+                                                                    .into(imgAvatarAuthor);
+                                                        }
+                                                    } catch (Exception _) {
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                    }
+                                }
+                            }
+                        });
+                    } catch (Exception _) {
                     }
+
+                    tvContent.setText(question.getContent());
+                    // get image question
+                    StorageReference imageStorageRef = FirebaseHelper.mFStorage.child("assets/questions/images/" + questionID);
+                    if (imageStorageRef != null) {
+                        imageStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                try {
+                                    Uri uri = task.getResult();
+                                    if (uri != null) {
+                                        Glide.with(getApplicationContext())
+                                                .load(task.getResult())
+                                                .into(imgQuestion);
+                                    }
+                                } catch (Exception _) {
+                                }
+                            }
+                        });
+                    }
+
+                    getListCommentFromRealtimeDatabase();
                 }
             }
 
@@ -100,10 +157,11 @@ public class DetailQuestion extends AppCompatActivity {
     }
 
     private void initUi() {
-        tvTitle = findViewById(R.id.tv_title_question);
-        tvAuthor = findViewById(R.id.tv_author_question);
+        imgQuestion = findViewById(R.id.img_question);
+        imgAvatarAuthor = findViewById(R.id.img_avatar_author);
+        tvTitle = findViewById(R.id.tv_item_question_title);
+        tvAuthorTime = findViewById(R.id.tv_question_date_author);
         tvContent = findViewById(R.id.tv_content_question);
-        tvTime = findViewById(R.id.tv_time_question);
         edtComment = findViewById(R.id.edt_comment);
         btnComment = findViewById(R.id.btn_comment);
         rcComments = findViewById(R.id.rcv_comments);
@@ -136,11 +194,11 @@ public class DetailQuestion extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Comment comment =  snapshot.getValue(Comment.class);
+                Comment comment = snapshot.getValue(Comment.class);
                 if (mListComments == null || mListComments.isEmpty()) {
                     return;
                 }
-                for (int i=0; i< mListComments.size(); i++) {
+                for (int i = 0; i < mListComments.size(); i++) {
                     if (comment.getId().equals(mListComments.get(i).getId())) {
                         mListComments.set(i, comment);
                         break;
@@ -152,11 +210,11 @@ public class DetailQuestion extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Comment comment =  snapshot.getValue(Comment.class);
+                Comment comment = snapshot.getValue(Comment.class);
                 if (mListComments == null || mListComments.isEmpty()) {
                     return;
                 }
-                for (int i=0; i< mListComments.size(); i++) {
+                for (int i = 0; i < mListComments.size(); i++) {
                     if (comment.getId().equals(mListComments.get(i).getId())) {
                         mListComments.remove(mListComments.get(i));
                         break;
@@ -185,15 +243,13 @@ public class DetailQuestion extends AppCompatActivity {
             return;
         }
         progressDialog.show();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        User _user = new User(user.getUid(), user.getEmail(), user.getDisplayName());
+        DatabaseReference myRef = FirebaseHelper.mDatabaseReference;
+        FirebaseUser user = FirebaseHelper.getCurrentUser();
+        if (user == null) return;
         String idComment = UUID.randomUUID().toString();
         Date currentTime = Calendar.getInstance().getTime();
 
-        Comment comment = new Comment(idComment, question.getId(), _user, content, currentTime.getTime());
+        Comment comment = new Comment(idComment, question.getId(), user.getUid(), content, currentTime.getTime());
         myRef.child("comments").child(idComment).setValue(comment, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@androidx.annotation.Nullable DatabaseError error, @NonNull DatabaseReference ref) {

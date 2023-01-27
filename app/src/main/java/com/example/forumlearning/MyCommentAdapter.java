@@ -53,9 +53,9 @@ public class MyCommentAdapter extends RecyclerView.Adapter<MyCommentAdapter.Comm
         Comment comment = mListComments.get(position);
         if (comment == null) return;
 
-        Date date = new Date(comment.time*1000L); // *1000 is to convert seconds to milliseconds
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/2021  -  hh:mm:ss"); // the format of your date
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7")); // give a timezone reference for formating (see comment at the bottom
+        Date date = new Date(comment.time);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
         String formattedDate = sdf.format(date);
 
         holder.tvTime.setText(formattedDate);

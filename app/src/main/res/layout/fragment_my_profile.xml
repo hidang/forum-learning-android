@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="10dp"
     tools:context=".ui.MyProfileFragment">
 
@@ -13,10 +13,11 @@
         android:id="@+id/img_avatar"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginBottom="50dp"
         android:src="@drawable/ic_avatar_default"
         app:civ_border_color="#FF000000"
-        android:layout_marginBottom="50dp"
         app:civ_border_width="2dp" />
+
     <LinearLayout
         android:id="@+id/profileview1"
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:hint="Họ Tên"
+            android:hint="FullName"
             android:textColorHint="#B81BD3">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -42,14 +43,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp">
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
             android:layout_marginBottom="5dp"
+            android:hint="Email"
             android:textColorHint="#B81BD3">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:hint="Phone"
+            android:textColorHint="#B81BD3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:hint="Address"
+            android:textColorHint="#B81BD3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp" />

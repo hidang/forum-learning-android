@@ -2,7 +2,6 @@ package com.example.forumlearning;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ public class Question {
 
     }
 
-    public User author;
+    public String idAuthor = "";
     public String title;
     public String content;
     public String id;
@@ -27,8 +26,8 @@ public class Question {
         this.content = content;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getIdAuthor() {
+        return idAuthor;
     }
 
     public long getTime() {
@@ -48,9 +47,9 @@ public class Question {
     }
 
 
-    public Question(String id, User author, String title, String content, long time) {
+    public Question(String id, String author, String title, String content, long time) {
         this.id = id;
-        this.author = author;
+        this.idAuthor = author;
         this.title = title;
         this.content = content;
         this.time = time;
