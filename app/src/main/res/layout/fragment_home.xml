@@ -3,21 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/purple_200"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
-    <!--    <Toolbar-->
-    <!--        android:id="@+id/toolbar_search"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="?attr/actionBarSize"-->
-    <!--        android:background="?attr/colorPrimary"-->
-    <!--        app:popupTheme="@style/ThemeOverlay.AppCompat.Dialog.Alert"/>-->
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp"
@@ -38,13 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <Button-->
-        <!--            android:id="@+id/btn_search_question"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:layout_height="60dp"-->
-        <!--            android:backgroundTint="#545459"-->
-        <!--            android:drawableEnd="@android:drawable/ic_menu_search" />-->
         <ImageView
             android:id="@+id/img_btn_search_question"
             android:layout_width="56dp"
@@ -59,21 +45,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
         android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_create_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginRight="8dp"
             android:background="@drawable/edittext_button_style_rounded"
             android:backgroundTint="#3D884C"
-            android:layout_marginRight="8dp"
-            android:text="+ Question"
+            android:drawableLeft="@drawable/ic_add_white"
+            android:text="Question"
             android:textSize="14dp" />
+
         <Button
             android:id="@+id/btn_my_question"
             android:layout_width="wrap_content"
@@ -81,15 +69,12 @@
             android:layout_gravity="center"
             android:background="@drawable/edittext_button_style_rounded_3"
             android:backgroundTint="#3D884C"
-            android:text="My Questions"
+            android:drawableLeft="@drawable/ic_list_white"
+            android:text="Questions"
             android:textSize="14dp" />
     </LinearLayout>
 
 
-    <!--    <ListView-->
-    <!--        android:id="@+id/list_question"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content" />-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rc_questions"
         android:layout_width="match_parent"

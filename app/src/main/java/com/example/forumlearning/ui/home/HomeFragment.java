@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.forumlearning.CreateQuestionActivity;
 import com.example.forumlearning.DetailQuestion;
+import com.example.forumlearning.MyQuestion;
 import com.example.forumlearning.Question;
 import com.example.forumlearning.QuestionAdapter;
 import com.example.forumlearning.R;
@@ -32,8 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -43,7 +46,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
     private EditText edtQuestion;
-    private Button btnCreateQuestion;
+    private Button btnCreateQuestion, btnMyQuestion;
     private ImageView btnSearchQuestion;
     private RecyclerView rcQuestions;
     private QuestionAdapter mQuestionAdapter;
@@ -74,8 +77,15 @@ public class HomeFragment extends Fragment {
             }
         });
         rcQuestions.setAdapter(mQuestionAdapter);
-
         getListQuestionFromRealtimeDatabase();
+
+        btnMyQuestion = view.findViewById(R.id.btn_my_question);
+        btnMyQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickMyQuestion();
+            }
+        });
 
 //        //3. Gán Data source vào ArrayAdapter
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -112,10 +122,19 @@ public class HomeFragment extends Fragment {
                 String searchInput = edtQuestion.getText().toString().trim();
                 Predicate<Question> byTitle = ques -> !ques.getTitle().toLowerCase().contains(searchInput.toLowerCase());
 //                List<Question> _m = mListQuestions;
-                mListQuestions.removeAll(mListQuestions.stream().filter(byTitle)
-                        .collect(Collectors.toList()));
-
-                mQuestionAdapter.notifyDataSetChanged();
+                // step 1: filter by title if needed
+                mListQuestions.removeAll(mListQuestions
+                        .stream()
+                        .filter(byTitle)
+                        .collect(Collectors.toList())
+                );
+                // step 2: sort by date and vote scores
+//                mListQuestions.sort(Comparator
+//                        .comparingLong(Question::getTime)
+//                        .comparingInt(Question::getVoteScores)
+//                        .reversed()
+//                );
+                notifyDataSetChanged();
             }
         });
 
@@ -130,7 +149,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().equals("")){
+                if (s.toString().equals("")) {
                     getListQuestionFromRealtimeDatabase();
                 }
             }
@@ -140,85 +159,108 @@ public class HomeFragment extends Fragment {
     }
 
     private void getListQuestionFromRealtimeDatabase() {
+        mListQuestions.clear();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("questions");
+        Query myRef = database.getReference("questions").orderByChild("time");
 
         // Cach 1
-//        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (mListQuestions != null) mListQuestions.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Question question = postSnapshot.getValue(Question.class);
+                    mListQuestions.add(question);
+                    List<Question> tempListQuestions = mListQuestions
+                            .stream().sorted(
+                                    Comparator
+                                            .comparing((Question q) -> q.getVoteScores() <= question.getVoteScores() && q.getTime() < question.getTime())
+                            )
+                            .collect(Collectors.toList());
+                    mListQuestions.clear();
+                    mListQuestions.addAll(tempListQuestions);
+                }
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Toast.makeText(getActivity(), "Get list questions fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Cach 2
+//        Query query = myRef.orderByChild("time");
+//        query.addChildEventListener(new ChildEventListener() {
 //            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (mListQuestions != null) mListQuestions.clear();
-//                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-//                    Question question = postSnapshot.getValue(Question.class);
-//                    mListQuestions.add(question);
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Question question = snapshot.getValue(Question.class);
+//                if (question != null) {
+//                    mListQuestions.add(0, question);
 //                }
-//                mQuestionAdapter.notifyDataSetChanged();
+//                notifyDataSetChanged();
 //            }
 //
 //            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(getActivity(), "Get list questions faild", Toast.LENGTH_SHORT).show();
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Question question = snapshot.getValue(Question.class);
+//                if (mListQuestions == null || mListQuestions.isEmpty()) {
+//                    return;
+//                }
+//                for (int i = 0; i < mListQuestions.size(); i++) {
+//                    if (question.getId().equals(mListQuestions.get(i).getId())) {
+//                        mListQuestions.set(i, question);
+//                        break;
+//                    }
+//                }
+//
+//                notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                Question question = snapshot.getValue(Question.class);
+//                if (mListQuestions == null || mListQuestions.isEmpty()) {
+//                    return;
+//                }
+//                for (int i = 0; i < mListQuestions.size(); i++) {
+//                    if (question.getId().equals(mListQuestions.get(i).getId())) {
+//                        mListQuestions.remove(mListQuestions.get(i));
+//                        break;
+//                    }
+//                }
+//
+//                notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
 //            }
 //        });
+    }
 
-        // Cach 2
-        Query query = myRef.orderByChild("time");
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Question question = snapshot.getValue(Question.class);
-                if (question != null) {
-                    mListQuestions.add(0, question);
-                }
-                mQuestionAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Question question =  snapshot.getValue(Question.class);
-                if (mListQuestions == null || mListQuestions.isEmpty()) {
-                    return;
-                }
-                for (int i=0; i< mListQuestions.size(); i++) {
-                    if (question.getId().equals(mListQuestions.get(i).getId())) {
-                        mListQuestions.set(i, question);
-                        break;
-                    }
-                }
-
-                mQuestionAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Question question =  snapshot.getValue(Question.class);
-                if (mListQuestions == null || mListQuestions.isEmpty()) {
-                    return;
-                }
-                for (int i=0; i< mListQuestions.size(); i++) {
-                    if (question.getId().equals(mListQuestions.get(i).getId())) {
-                        mListQuestions.remove(mListQuestions.get(i));
-                        break;
-                    }
-                }
-
-                mQuestionAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    private void notifyDataSetChanged() {
+//        mListQuestions.sort(Comparator
+//                        .comparingLong(Question::getTime)
+//                        .thenComparingInt(Question::getVoteScores)
+//                        .reversed());
+        mQuestionAdapter.notifyDataSetChanged();
     }
 
     private void onClickCreateQuestion() {
         Intent intent = new Intent(getActivity(), CreateQuestionActivity.class);
+        startActivity(intent);
+    }
+
+    private void onClickMyQuestion() {
+        Intent intent = new Intent(getActivity(), MyQuestion.class);
         startActivity(intent);
     }
 

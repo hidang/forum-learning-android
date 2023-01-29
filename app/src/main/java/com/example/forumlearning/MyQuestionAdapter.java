@@ -53,9 +53,9 @@ public class MyQuestionAdapter extends RecyclerView.Adapter<MyQuestionAdapter.Qu
         Question question = mListQuestion.get(position);
         if (question == null) return;
         String user = question.getIdAuthor();
-        holder.tvTitleQuestion.setText(question.title);
+        holder.tvTitleQuestion.setText(question.getTitle());
 
-        Date date = new Date(question.time); // *1000 is to convert seconds to milliseconds
+        Date date = new Date(question.getTime()); // *1000 is to convert seconds to milliseconds
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy  -  HH:mm:ss"); // the format of your date
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+7")); // give a timezone reference for formating (see comment at the bottom
         String formattedDate = sdf.format(date);

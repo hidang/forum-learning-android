@@ -1,10 +1,6 @@
 package com.example.forumlearning;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,9 +10,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.UUID;
-
 public class FirebaseHelper {
+    public interface IResultCallback {
+        void success();
+
+        void failure();
+    }
 
     private static final String TAG = "FirebaseHelper";
     public static FirebaseHelper firebaseHelper;
@@ -32,6 +31,7 @@ public class FirebaseHelper {
     public static StorageReference mFStorage;
 
     public FirebaseHelper() {
+        // init if needed
         // [START initialize_database_ref]
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
@@ -55,9 +55,24 @@ public class FirebaseHelper {
         return mAuth.getCurrentUser();
     }
 
-//    public void writeNewUser(String userId, String name, String email) {
-//        User user = new User(name, email);
-//
-//        mDatabase.child("users").child(userId).setValue(user);
-//    }
+    public static void updateQuestion(Question question, IResultCallback result) {
+        mDatabaseReference
+                .child("questions")
+                .child(question.getId())
+                .updateChildren(question.toMap(), new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@androidx.annotation.Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        result.success();
+                    }
+                });
+    }
+
+    public static void updateUser(User user, IResultCallback result) {
+        mDatabaseReference.child("users").child(getCurrentUser().getUid()).updateChildren(user.toMap(), new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@androidx.annotation.Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                result.success();
+            }
+        });
+    }
 }

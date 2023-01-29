@@ -43,7 +43,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUi() {
-        imgAvatar = navigationView.getHeaderView(0).findViewById(R.id.img_avatar);
+        imgAvatar = navigationView.getHeaderView(0).findViewById(R.id.img_avatar_nav_header);
         tvName = navigationView.getHeaderView(0).findViewById(R.id.tv_name);
         tvEmail = navigationView.getHeaderView(0).findViewById(R.id.tv_email);
     }

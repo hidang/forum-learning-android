@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.forumlearning.FirebaseHelper;
 import com.example.forumlearning.MainActivity;
-import com.example.forumlearning.MyQuestion;
 import com.example.forumlearning.R;
 import com.example.forumlearning.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,11 +34,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
@@ -74,7 +71,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void initUi() {
-        imgAvatar = mView.findViewById(R.id.img_avatar);
+        imgAvatar = mView.findViewById(R.id.img_avatar_nav_header);
         edtFullName = mView.findViewById(R.id.edt_fullname);
         edtEmail = mView.findViewById(R.id.edt_email);
         edtPhone = mView.findViewById(R.id.edt_phone_number);
@@ -214,12 +211,14 @@ public class MyProfileFragment extends Fragment {
         }
 
         User userTemp = new User(userFirebaseAuth.getUid(), strEmail, strFullName, strPhoneNumber, strAddress);
-        DatabaseReference myRef = FirebaseHelper.mDatabaseReference.child("users");
-        myRef.child(userFirebaseAuth.getUid()).updateChildren(userTemp.toMap(), new DatabaseReference.CompletionListener() {
+        FirebaseHelper.updateUser(userTemp, new FirebaseHelper.IResultCallback() {
             @Override
-            public void onComplete(@androidx.annotation.Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+            public void success() {
                 Toast.makeText(getActivity(), "Update Profile success!", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
+            }
+            @Override
+            public void failure() {
             }
         });
     }

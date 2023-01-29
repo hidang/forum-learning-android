@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,11 +65,14 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                             // set fullname
                             holder.tvFullname.setText(author.getFullname());
                             // set date
-                            Date date = new Date(question.time);
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm - MM-yyyy");
+                            Date date = new Date(question.getTime());
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm - dd-MM-yyyy");
                             sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
                             String formattedDate = sdf.format(date);
                             holder.tvDatetime.setText(formattedDate);
+                            // set vote scores
+                            int sources = question.getListUserVoteUp().size() - question.getListUserVoteDown().size();
+                            holder.tvVoteScores.setText(Integer.toString(sources));
                             // set avatar author
                             StorageReference avatarsStorageRef = FirebaseHelper.mFStorage.child("assets/avatars/" + author.getId());
                             if (avatarsStorageRef != null) {
@@ -98,7 +102,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             }
         });
 
-        holder.tvTitleQuestion.setText(question.title);
+        holder.tvTitleQuestion.setText(question.getTitle());
         holder.itemQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +119,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
 
     public class QuestionViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvFullname, tvDatetime, tvTitleQuestion;
+        private TextView tvFullname, tvDatetime, tvTitleQuestion, tvVoteScores;
         private ImageView imgAuthorAvatar;
         private LinearLayout itemQuestion;
 
@@ -124,6 +128,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             tvFullname = itemView.findViewById(R.id.tv_item_question_fullname);
             tvDatetime = itemView.findViewById(R.id.tv_item_question_datetime);
             tvTitleQuestion = itemView.findViewById(R.id.tv_item_question_title);
+            tvVoteScores = itemView.findViewById(R.id.tv_item_question_vote_scores);
             itemQuestion = itemView.findViewById(R.id.item_question);
             imgAuthorAvatar = itemView.findViewById(R.id.img_item_question_author);
         }
